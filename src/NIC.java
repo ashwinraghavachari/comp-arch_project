@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class NIC extends ProcessingUnit{
 
     private List<Request> seen = new ArrayList<>();
@@ -24,7 +23,7 @@ public class NIC extends ProcessingUnit{
         }
         else
         {
-            //incomming -> send to CPU
+            //incoming -> send to CPU
             seen.add(req);
             req.setDestination(inboundPU);
             req.setStart(sim.getCurrentTime() + NIC_TO_CPU_DELAY);

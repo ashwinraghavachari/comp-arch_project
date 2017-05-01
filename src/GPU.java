@@ -1,25 +1,36 @@
-import java.util.*;
+import java.util.HashMap;
 
 public class GPU extends ProcessingUnit{
-	private int totalEnergy;
+	private double totalEnergy;
 	private double freq;
-	private HashMap<Double, Double> freqVoltMap;
+	private HashMap<Double, Double> freqToVolt;
+	Simulator sim;
 	
-	public GPU(){
+	public GPU(Simulator sim){
 		// Maps freq (GHz) to voltage (V)
 		// Specs taken from NVIDIA GTX980
-		HashMap<Double, Double> freqVoltMap = new HashMap<Double, Double>();
-		freqVoltMap.put(.540, 0.987);
-		freqVoltMap.put(.405, 0.850);
-		freqVoltMap.put(.135, 0.850);
+		this.freqToVolt = new HashMap<Double, Double>();
+		this.freqToVolt.put(.540, 0.987);
+		this.freqToVolt.put(.405, 0.850);
+		this.freqToVolt.put(.135, 0.850);
+		
+		this.sim = sim;
 	}
 	
 	@Override
 	public void processRequest (Request req) {
-		
+		int gpucycles = req.getGPUCycles();
+		double time = (double)gpucycles / freq;
+		double voltage = freqToVolt.get(freq);
+		double curEnergy = time * voltage * voltage;
+		this.totalEnergy += curEnergy;
 	}
 	
-	void setFreq(int freq){
-		
+	public void setFreq(double freq){
+		this.freq = freq;
+	}
+	
+	public double getTotalEnergyUsage(){
+		return totalEnergy;
 	}
 }

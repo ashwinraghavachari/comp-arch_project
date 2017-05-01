@@ -1,17 +1,7 @@
 
 public abstract class Request implements Comparable<Request>{
-	public long getStartTime() {
-        return startTime;
-    }
-    public int getPreGPUCycles() {
-        return preGPUCycles;
-    }
-    public int getGPUCycles() {
-        return GPUCycles;
-    }
 
     private boolean needGPU;
-	//private boolean needCPU;
 	private int SLA;
 
 	protected long entryTime;
@@ -24,7 +14,7 @@ public abstract class Request implements Comparable<Request>{
 	private int CPUCycles;
 	protected ProcessingUnit destination;
 	
-	public boolean isNeedGPU() {
+	public boolean needsGPU() {
 		return needGPU;
 	}
 	public int getSLA() {
@@ -36,6 +26,16 @@ public abstract class Request implements Comparable<Request>{
 	public int getCPUCycles() {
 		return CPUCycles;
 	}
+
+	public long getStartTime() {
+        return startTime;
+    }
+    public int getPreGPUCycles() {
+        return preGPUCycles;
+    }
+    public int getGPUCycles() {
+        return GPUCycles;
+    }
 
 	public ProcessingUnit getDestination() {
 		return destination;
