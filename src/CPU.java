@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class CPU implements ProcessingUnit{
+public class CPU extends ProcessingUnit{
 	private int totalEnergy;
 	private int freq;
 	private HashMap<Double, Double> freqVoltMap;

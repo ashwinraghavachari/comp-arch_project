@@ -1,7 +1,7 @@
 import java.util.HashMap;
 
 
-public class GPU implements ProcessingUnit{
+public class GPU extends ProcessingUnit{
 	private int totalEnergy;
 	private int freq;
 	private HashMap<Double, Double> freqVoltMap;
