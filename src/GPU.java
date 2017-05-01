@@ -1,12 +1,11 @@
-import java.util.HashMap;
-
+import java.util.*;
 
 public class GPU implements ProcessingUnit{
 	private int totalEnergy;
-	private int freq;
+	private double freq;
 	private HashMap<Double, Double> freqVoltMap;
 	
-	public CPU(){
+	public GPU(){
 		// Maps freq (GHz) to voltage (V)
 		// Specs taken from NVIDIA GTX980
 		HashMap<Double, Double> freqVoltMap = new HashMap<Double, Double>();

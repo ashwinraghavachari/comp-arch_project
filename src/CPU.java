@@ -1,26 +1,30 @@
 import java.util.*;
 
 public class CPU implements ProcessingUnit{
-	private int totalEnergy;
-	private int freq;
-	private HashMap<Double, Double> freqVoltMap;
+	private double totalEnergy;
+	private double freq;
+	private HashMap<Double, Double> freqToVolt;
 	
 	public CPU(){
 		// Maps freq (GHz) to voltage (V)
 		// Specs taken from the intel i7
-		HashMap<Double, Double> freqVoltMap = new HashMap<Double, Double>();
-		freqVoltMap.put(2.92, 1.176);
-		freqVoltMap.put(3.65, 1.240);
-		freqVoltMap.put(3.80, 1.336);
-		freqVoltMap.put(4.00, 1.496);
+		HashMap<Double, Double> freqToVolt = new HashMap<Double, Double>();
+		freqToVolt.put(2.92, 1.176);
+		freqToVolt.put(3.65, 1.240);
+		freqToVolt.put(3.80, 1.336);
+		freqToVolt.put(4.00, 1.496);
 	}
 	
-	@Override
-	void processRequest (Request req) {
-		
+	//@Override
+	public void processRequest (Request req) {
+		int preGPUcycles = req.getCyclecount();
+		double time = (double)preGPUcycles / freq;
+		double voltage = freqToVolt.get(freq);
+		double curEnergy = time * voltage * voltage;
+		totalEnergy += curEnergy;
 	}
 	
-	void setFreq(int freq){
-		
+	public void setFreq(double freq){
+		this.freq = freq;
 	}
 }
