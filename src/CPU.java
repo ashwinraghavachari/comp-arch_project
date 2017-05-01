@@ -1,9 +1,9 @@
 import java.util.*;
 
-public class CPU implements ProcessingUnit{
-	private double totalEnergy;
-	private double freq;
-	private HashMap<Double, Double> freqToVolt;
+public class CPU extends ProcessingUnit{
+	private int totalEnergy;
+	private int freq;
+	private HashMap<Double, Double> freqVoltMap;
 	
 	public CPU(){
 		// Maps freq (GHz) to voltage (V)

@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class GPU implements ProcessingUnit{
+public class GPU extends ProcessingUnit{
 	private int totalEnergy;
 	private double freq;
 	private HashMap<Double, Double> freqVoltMap;
@@ -15,7 +15,7 @@ public class GPU implements ProcessingUnit{
 	}
 	
 	@Override
-	void processRequest (Request req) {
+	public void processRequest (Request req) {
 		
 	}
 	
