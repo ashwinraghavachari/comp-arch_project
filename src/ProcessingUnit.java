@@ -1,5 +1,16 @@
 
-public interface ProcessingUnit {
+public abstract class ProcessingUnit {
 
-	void processRequest(Request req);
+	public abstract void processRequest(Request req);
+	
+	ProcessingUnit inboundPU;
+	ProcessingUnit outboundPU;
+
+    public void addInbound(ProcessingUnit pu) {
+        inboundPU = pu;
+    }
+
+    public void addOutbound(ProcessingUnit pu) {
+        outboundPU = pu;
+    }
 }

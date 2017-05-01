@@ -6,6 +6,7 @@ import java.util.Queue;
 public class Simulator implements Runnable{
 
 	private Queue<Request> eventStream = new PriorityQueue<>();
+    private long simTime = 0;
 	
 	public Simulator()
 	{
@@ -21,6 +22,7 @@ public class Simulator implements Runnable{
 		while(!eventStream.isEmpty())
 		{
 			Request req = eventStream.poll();
+			simTime = req.getStartTime();
 			req.processRequest();
 		}
 	}	
@@ -40,4 +42,8 @@ public class Simulator implements Runnable{
 		Simulator sim = new Simulator();
 		sim.run();
 	}
+
+    public long getCurrentTime() {
+        return simTime;
+    }
 }

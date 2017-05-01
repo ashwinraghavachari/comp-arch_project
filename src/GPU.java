@@ -16,7 +16,7 @@ public class GPU implements ProcessingUnit{
 	}
 	
 	@Override
-	void processRequest (Request req) {
+	public void processRequest (Request req) {
 		
 	}
 	
