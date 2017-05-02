@@ -88,7 +88,7 @@ public class Simulator implements Runnable{
 
     private void printSummary() {
         System.out.println("*******SIM FINISH*******");
-        System.out.println("Policy: " + policy.getClass().getName());
+        System.out.println("Policy: " + policy.getClass().getSimpleName());
         System.out.println();
 
 		client.printSummary();
@@ -137,8 +137,8 @@ public class Simulator implements Runnable{
 	        double gpuImprovement = (baselineGPU - sim.gpuEnergy()) 
 	                /sim.gpuEnergy() * 100;
 	    
-	        System.out.println("CPU improvement: " + cpuImprovement);
-	        System.out.println("GPU improvement: " + gpuImprovement);
+	        System.out.println("CPU energy improvement: " + cpuImprovement + "%");
+	        System.out.println("GPU energy improvement: " + gpuImprovement + "%");
 	    }
 	    
 	}

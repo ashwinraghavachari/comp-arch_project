@@ -66,18 +66,18 @@ public class Client extends ProcessingUnit{
     public void printSummary()
     {
         System.out.println("Total reqs sent:\t" + workload.size());
-        System.out.println("Successful reqs:\t" + successfulReqs.size());
-        System.out.println("failed reqs:\t" + failedReqs.size());
-        System.out.println("average +sla time:\t" + 
+        System.out.println("Successful sla reqs:\t" + successfulReqs.size());
+        System.out.println("failed sla reqs:\t" + failedReqs.size());
+        System.out.println("average +sla time(ns):\t" + 
                 successfulReqs.stream().map(r -> r.getTotalRunTime()).reduce(Long::sum).get()
                 /(long)successfulReqs.size());
-        System.out.println("average -sla time:\t" + 
+        System.out.println("average -sla time(ns):\t" + 
                 failedReqs.stream().map(r -> r.getTotalRunTime()).reduce(Long::sum).get()
                 /(long)failedReqs.size());
-        System.out.println("average cpu time:\t" + 
+        System.out.println("average cpu req time(ns):\t" + 
                 cpuReqs.stream().map(r -> r.getTotalRunTime()).reduce(Long::sum).get()
                 /(long)failedReqs.size());
-        System.out.println("average gpu time:\t" + 
+        System.out.println("average gpu req time(ns):\t" + 
                 gpuReqs.stream().map(r -> r.getTotalRunTime()).reduce(Long::sum).get()
                 /(long)failedReqs.size());
 
