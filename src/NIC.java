@@ -20,6 +20,8 @@ public class NIC extends ProcessingUnit{
             req.setDestination(outboundPU);
             req.setStart(sim.getCurrentTime());
             sim.addReq(req);
+            
+            inboundPU.setFreq(FREQ_STATE.CPU0);
         }
         else
         {
@@ -28,6 +30,8 @@ public class NIC extends ProcessingUnit{
             req.setDestination(inboundPU);
             req.setStart(sim.getCurrentTime() + NIC_TO_CPU_DELAY);
             sim.addReq(req);
+            
+            inboundPU.setFreq(FREQ_STATE.CPU3);
         }
 	}
 }

@@ -2,7 +2,6 @@ import java.util.HashMap;
 
 public class CPU extends ProcessingUnit{
 	private double totalEnergy;
-	private double freq;
 	private HashMap<Double, Double> freqToVolt;
 	Simulator sim;
 	
@@ -29,19 +28,23 @@ public class CPU extends ProcessingUnit{
 		// Send request to GPU if needed
 		if (req.needsGPU()){
 			req.setDestination(inboundPU);
+			inboundPU.setFreq(FREQ_STATE.GPU2);
 		}
-		// Send request back to NIC if done
 		else {
 			req.setDestination(outboundPU);
+			inboundPU.setFreq(FREQ_STATE.GPU0);
 		}
-		
-	}
-	
-	public void setFreq(double freq){
-		this.freq = freq;
 	}
 	
 	public double getTotalEnergyUsage(){
+		return totalEnergy;
+	}
+	
+	public double updateEnergyUsage(int idlecycles){
+		double time = (double)idlecycles / freq;
+		double voltage = freqToVolt.get(freq);
+		double idleEnergy = time * voltage * voltage;
+		totalEnergy += idleEnergy;
 		return totalEnergy;
 	}
 }

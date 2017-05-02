@@ -5,6 +5,7 @@ public abstract class ProcessingUnit {
 	
 	ProcessingUnit inboundPU;
 	ProcessingUnit outboundPU;
+	protected double freq;
 
     public void addInbound(ProcessingUnit pu) {
         inboundPU = pu;
@@ -13,4 +14,8 @@ public abstract class ProcessingUnit {
     public void addOutbound(ProcessingUnit pu) {
         outboundPU = pu;
     }
+    
+    public void setFreq(FREQ_STATE f){
+		this.freq = f.getFreq();
+	}
 }
