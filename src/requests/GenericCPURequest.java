@@ -1,16 +1,24 @@
 package requests;
 
+import processing.ProcessingUnit;
+
 public class GenericCPURequest extends Request {
     
-    private static final long GPU_CYCLES = 1000;
     private static final long CPU_CYCLES = 1000;
-    private static final long PRE_GPU_CYCLES = 1000;
 
-    public GenericCPURequest(long entryTime) {
+    private static final long SLA = 1000;
+
+    public GenericCPURequest(long entryTime, ProcessingUnit dest) {
         this.entryTime = entryTime;
-        GPUCycles = GPU_CYCLES;
+        startTime = entryTime;
+
+        needGPU = false;
         CPUCycles = CPU_CYCLES;
-        preGPUCycles = PRE_GPU_CYCLES;
+        cyclecount = CPU_CYCLES;
+        
+        destination = dest;
+        
+        sla = SLA;
     }
 
     @Override

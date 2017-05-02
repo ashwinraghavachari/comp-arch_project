@@ -16,13 +16,14 @@ public class Simulator implements Runnable{
 
 	private Queue<Request> eventStream = new PriorityQueue<>();
     private long simTime = 0;
+    private Client client;
 	
 	public Simulator()
 	{
 		ProcessingUnit cpu = new CPU(this);
 		ProcessingUnit gpu = new GPU(this);
 		ProcessingUnit nic = new NIC(this);
-		Client client = new Client(this);
+		client = new Client(this, nic);
 		
 		client.addInbound(nic);
 		client.addOutbound(nic);
@@ -48,6 +49,11 @@ public class Simulator implements Runnable{
 		}
 	}	
 	
+	public Client getClient()
+	{
+	    return client;
+	}
+	
 	public boolean addReqs(List<Request> reqs)
 	{
 		return eventStream.addAll(reqs);
@@ -58,13 +64,15 @@ public class Simulator implements Runnable{
 		return eventStream.add(req);
 	}	
 	
-	public static void main()
-	{
-		Simulator sim = new Simulator();
-		sim.run();
-	}
-
     public long getCurrentTime() {
         return simTime;
     }
+
+	public static void main(String[] args)
+	{
+		Simulator sim = new Simulator();
+		sim.run();
+		sim.getClient().printSummary();
+	}
+
 }
