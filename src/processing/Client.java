@@ -14,6 +14,8 @@ public class Client extends ProcessingUnit{
     Simulator sim;
     List<Request> successfulReqs = new ArrayList<>();
     List<Request> failedReqs = new ArrayList<>();
+    List<Request> gpuReqs = new ArrayList<>();
+    List<Request> cpuReqs = new ArrayList<>();
 
     private static final long GPU_REQUESTS = 1000;
     private static final long CPU_REQUESTS = 1000;
@@ -23,12 +25,15 @@ public class Client extends ProcessingUnit{
         this.sim = sim;
         for(long i = 0; i < GPU_REQUESTS; i++)
         {
-            workload.add(new GenericGPURequest(i*REQUEST_SEPARATION, systemEntry));
+            gpuReqs.add(new GenericGPURequest(i*REQUEST_SEPARATION, systemEntry));
         }
         for(long i = 0; i < CPU_REQUESTS; i++)
         {
-            workload.add(new GenericCPURequest(i*REQUEST_SEPARATION, systemEntry));
+            cpuReqs.add(new GenericCPURequest(i*REQUEST_SEPARATION, systemEntry));
         }
+
+        workload.addAll(gpuReqs);
+        workload.addAll(cpuReqs);
 
         sim.addReqs(workload);
     }
@@ -55,16 +60,23 @@ public class Client extends ProcessingUnit{
     public void printSummary()
     {
         int total = successfulReqs.size() + failedReqs.size();
-        System.out.println("Total reqs:      " + total);
-        System.out.println("Successful reqs: " + successfulReqs.size());
-        System.out.println("failed reqs:     " + failedReqs.size());
-        System.out.println("average success time:        " + 
+        System.out.println("Total reqs:\t" + total);
+        System.out.println("Successful reqs:\t" + successfulReqs.size());
+        System.out.println("failed reqs:\t" + failedReqs.size());
+        System.out.println("average +sla time:\t" + 
                 successfulReqs.stream().map(r -> r.getTotalRunTime()).reduce(Long::sum).get()
                 /(long)successfulReqs.size());
-        System.out.println("average failure time:        " + 
+        System.out.println("average -sla time:\t" + 
                 failedReqs.stream().map(r -> r.getTotalRunTime()).reduce(Long::sum).get()
                 /(long)failedReqs.size());
-        System.out.println("end time:        " + sim.getCurrentTime());
+        System.out.println("average cpu time:\t" + 
+                cpuReqs.stream().map(r -> r.getTotalRunTime()).reduce(Long::sum).get()
+                /(long)failedReqs.size());
+        System.out.println("average gpu time:\t" + 
+                gpuReqs.stream().map(r -> r.getTotalRunTime()).reduce(Long::sum).get()
+                /(long)failedReqs.size());
+
+        System.out.println("end time:\t" + sim.getCurrentTime());
     }
 
     

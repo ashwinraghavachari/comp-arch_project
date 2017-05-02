@@ -9,6 +9,8 @@ public class GPU extends ProcessingUnit{
 	private double totalEnergy;
 	private Map<Double, Double> freqToVolt;
 	Simulator sim;
+	private long currentEndTime;
+	private long currentDelayTime;
 	
 	public GPU(Simulator sim){
 		// Maps freq (GHz) to voltage (V)
@@ -23,15 +25,24 @@ public class GPU extends ProcessingUnit{
 	
 	@Override
 	public void processRequest (Request req) {
+	    if(sim.getCurrentTime() < currentEndTime)
+	    {
+	        req.setStart(currentDelayTime++);
+	        sim.addReq(req);
+	        return;
+	    }
+
 		long gpucycles = req.getGPUCycles();
 		double time = (double)gpucycles / freq;
 		double voltage = freqToVolt.get(freq);
 		double curEnergy = time * voltage * voltage;
 		this.totalEnergy += curEnergy;
 		
+		long scheduledTime = sim.getCurrentTime() + (long)time;
+		currentDelayTime = currentEndTime = scheduledTime;
 		
 		req.setDestination(outboundPU);
-		req.setStart(sim.getCurrentTime() + (long)time);
+		req.setStart(scheduledTime);
         sim.addReq(req);
 	}
 	
