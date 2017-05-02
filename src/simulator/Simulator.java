@@ -1,6 +1,15 @@
+package simulator;
+
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
+
+import processing.CPU;
+import processing.Client;
+import processing.GPU;
+import processing.NIC;
+import processing.ProcessingUnit;
+import requests.Request;
 
 
 public class Simulator implements Runnable{

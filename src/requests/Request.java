@@ -1,3 +1,6 @@
+package requests;
+
+import processing.ProcessingUnit;
 
 public abstract class Request implements Comparable<Request>{
 
@@ -8,10 +11,10 @@ public abstract class Request implements Comparable<Request>{
 	private long startTime;
 	private long cyclecount;
 	//if(needGPU)
-	private long preGPUCycles;
-	private long GPUCycles;
+	protected long preGPUCycles;
+	protected long GPUCycles;
 
-	private long CPUCycles;
+	protected long CPUCycles;
 	protected ProcessingUnit destination;
 	
 	public boolean needsGPU() {

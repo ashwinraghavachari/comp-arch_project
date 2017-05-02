@@ -1,3 +1,6 @@
+package processing;
+
+import requests.Request;
 
 public abstract class ProcessingUnit {
 
