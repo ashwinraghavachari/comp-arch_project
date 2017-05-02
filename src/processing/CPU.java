@@ -73,4 +73,15 @@ public class CPU extends ProcessingUnit{
 		totalEnergy += idleEnergy;
 		return totalEnergy;
 	}
+
+    @Override
+    public long getDelayTime() {
+        return currentDelayTime;
+    }
+
+    @Override
+    public void printSummary() {
+        System.out.println("***CPU***");
+        System.out.println("total energy: " + totalEnergy);
+    }
 }

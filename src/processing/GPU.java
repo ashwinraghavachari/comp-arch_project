@@ -57,4 +57,15 @@ public class GPU extends ProcessingUnit{
 		totalEnergy += idleEnergy;
 		return totalEnergy;
 	}
+
+    @Override
+    public long getDelayTime() {
+        return currentDelayTime;
+    }
+
+    @Override
+    public void printSummary() {
+        System.out.println("***GPU***");
+        System.out.println("total energy: " + totalEnergy);
+    }
 }

@@ -40,4 +40,15 @@ public class NIC extends ProcessingUnit{
             inboundPU.setFreq(FREQ_STATE.CPU3);
         }
 	}
+
+    @Override
+    public long getDelayTime() {
+        return sim.getCurrentTime();
+    }
+
+    @Override
+    public void printSummary() {
+        System.out.println("***NIC***");
+        System.out.println("");
+    }
 }

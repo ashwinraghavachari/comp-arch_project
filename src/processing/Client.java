@@ -57,10 +57,10 @@ public class Client extends ProcessingUnit{
         }
     }
     
+    @Override
     public void printSummary()
     {
-        int total = successfulReqs.size() + failedReqs.size();
-        System.out.println("Total reqs:\t" + total);
+        System.out.println("Total reqs sent:\t" + workload.size());
         System.out.println("Successful reqs:\t" + successfulReqs.size());
         System.out.println("failed reqs:\t" + failedReqs.size());
         System.out.println("average +sla time:\t" + 
@@ -79,5 +79,10 @@ public class Client extends ProcessingUnit{
         System.out.println("end time:\t" + sim.getCurrentTime());
     }
 
+    @Override
+    public long getDelayTime()
+    {
+        return sim.getCurrentTime();
+    }
     
 }

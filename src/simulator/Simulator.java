@@ -16,13 +16,17 @@ public class Simulator implements Runnable{
 
 	private Queue<Request> eventStream = new PriorityQueue<>();
     private long simTime = 0;
-    private Client client;
+
+    private ProcessingUnit client;
+    private ProcessingUnit cpu;
+    private ProcessingUnit gpu;
+    private ProcessingUnit nic;
 	
 	public Simulator()
 	{
-		ProcessingUnit cpu = new CPU(this);
-		ProcessingUnit gpu = new GPU(this);
-		ProcessingUnit nic = new NIC(this);
+		cpu = new CPU(this);
+		gpu = new GPU(this);
+		nic = new NIC(this);
 		client = new Client(this, nic);
 		
 		client.addInbound(nic);
@@ -49,11 +53,6 @@ public class Simulator implements Runnable{
 		}
 	}	
 	
-	public Client getClient()
-	{
-	    return client;
-	}
-	
 	public boolean addReqs(List<Request> reqs)
 	{
 		return eventStream.addAll(reqs);
@@ -68,11 +67,22 @@ public class Simulator implements Runnable{
         return simTime;
     }
 
+    private void printSummary() {
+		client.printSummary();
+		cpu.printSummary();
+		gpu.printSummary();
+		nic.printSummary();
+    }
+
+    /*
+     * Compare dvfs with cpu and gpu in lock step vs independent
+     */
 	public static void main(String[] args)
 	{
 		Simulator sim = new Simulator();
 		sim.run();
-		sim.getClient().printSummary();
+		
+		sim.printSummary();
 	}
 
 }
