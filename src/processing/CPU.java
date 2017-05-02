@@ -8,7 +8,6 @@ import utils.FREQ_STATE;
 
 public class CPU extends ProcessingUnit{
 	private double totalEnergy;
-	private double freq;
 	private Map<Double, Double> freqToVolt;
 	Simulator sim;
 	
@@ -30,6 +29,7 @@ public class CPU extends ProcessingUnit{
 		
 		// Send request to GPU if needed
 		if (req.needsGPU()){
+		    req.setNeedsGPU(false);
 			req.setDestination(inboundPU);
 			inboundPU.setFreq(FREQ_STATE.GPU2);
 			cpucycles = req.getPreGPUCycles();
@@ -45,6 +45,8 @@ public class CPU extends ProcessingUnit{
 		double curEnergy = time * voltage * voltage;
 		this.totalEnergy += curEnergy;
 		
+		req.setStart(sim.getCurrentTime() + (long)time);
+        sim.addReq(req);
 	}
 	
 	public double getTotalEnergyUsage(){

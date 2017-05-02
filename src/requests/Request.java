@@ -11,13 +11,6 @@ public abstract class Request implements Comparable<Request>{
 	protected long startTime;
 	protected long totalRunTime;
 
-	public long getTotalRunTime() {
-        return totalRunTime;
-    }
-    public void setTotalRunTime(long totalRunTime) {
-        this.totalRunTime = totalRunTime;
-    }
-
     protected long cyclecount;
 	//if(needGPU)
 	protected long preGPUCycles;
@@ -72,5 +65,14 @@ public abstract class Request implements Comparable<Request>{
     public long getEntryTime() {
         return entryTime;
     }
+    public void setNeedsGPU(boolean b) {
+        needGPU = b;
+    }
 	
+	public long getTotalRunTime() {
+        return totalRunTime;
+    }
+    public void setTotalRunTime(long totalRunTime) {
+        this.totalRunTime = totalRunTime;
+    }
 }

@@ -7,7 +7,6 @@ import simulator.Simulator;
 
 public class GPU extends ProcessingUnit{
 	private double totalEnergy;
-	private double freq;
 	private Map<Double, Double> freqToVolt;
 	Simulator sim;
 	
@@ -30,7 +29,10 @@ public class GPU extends ProcessingUnit{
 		double curEnergy = time * voltage * voltage;
 		this.totalEnergy += curEnergy;
 		
+		
 		req.setDestination(outboundPU);
+		req.setStart(sim.getCurrentTime() + (long)time);
+        sim.addReq(req);
 	}
 	
 	public double getTotalEnergyUsage(){

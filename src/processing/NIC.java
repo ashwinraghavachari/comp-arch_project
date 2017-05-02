@@ -26,6 +26,7 @@ public class NIC extends ProcessingUnit{
             req.setStart(sim.getCurrentTime());
             sim.addReq(req);
             
+            //Set CPU asleep
             inboundPU.setFreq(FREQ_STATE.CPU0);
         }
         else

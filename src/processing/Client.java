@@ -59,9 +59,11 @@ public class Client extends ProcessingUnit{
         System.out.println("Successful reqs: " + successfulReqs.size());
         System.out.println("failed reqs:     " + failedReqs.size());
         System.out.println("average success time:        " + 
-                successfulReqs.stream().map(r -> r.getTotalRunTime()).reduce(Long::sum));
+                successfulReqs.stream().map(r -> r.getTotalRunTime()).reduce(Long::sum).get()
+                /(long)successfulReqs.size());
         System.out.println("average failure time:        " + 
-                failedReqs.stream().map(r -> r.getTotalRunTime()).reduce(Long::sum));
+                failedReqs.stream().map(r -> r.getTotalRunTime()).reduce(Long::sum).get()
+                /(long)failedReqs.size());
         System.out.println("end time:        " + sim.getCurrentTime());
     }
 
