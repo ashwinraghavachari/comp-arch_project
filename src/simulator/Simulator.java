@@ -1,5 +1,7 @@
 package simulator;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -10,6 +12,10 @@ import processing.GPU;
 import processing.NIC;
 import processing.ProcessingUnit;
 import requests.Request;
+import scheduling.GPUIndependentCPUCoupled;
+import scheduling.LockStep;
+import scheduling.NaiveIndependent;
+import scheduling.SchedulingPolicy;
 
 
 public class Simulator implements Runnable{
@@ -21,8 +27,10 @@ public class Simulator implements Runnable{
     private ProcessingUnit cpu;
     private ProcessingUnit gpu;
     private ProcessingUnit nic;
+    
+    private SchedulingPolicy policy;
 	
-	public Simulator()
+	public Simulator(SchedulingPolicy policy)
 	{
 		cpu = new CPU(this);
 		gpu = new GPU(this);
@@ -40,6 +48,10 @@ public class Simulator implements Runnable{
 
 		gpu.addInbound(cpu);
 		gpu.addOutbound(cpu);
+		
+		this.policy = policy;
+		policy.setCPU(cpu);
+		policy.setGPU(gpu);
 	}
 
 	@Override
@@ -66,8 +78,17 @@ public class Simulator implements Runnable{
     public long getCurrentTime() {
         return simTime;
     }
+    
+    public SchedulingPolicy getPolicy()
+    {
+        return policy;
+    }
 
     private void printSummary() {
+        System.out.println("*******SIM FINISH*******");
+        System.out.println("Policy: " + policy.getClass().getName());
+        System.out.println();
+
 		client.printSummary();
 		cpu.printSummary();
 		gpu.printSummary();
@@ -79,10 +100,18 @@ public class Simulator implements Runnable{
      */
 	public static void main(String[] args)
 	{
-		Simulator sim = new Simulator();
-		sim.run();
-		
-		sim.printSummary();
+	    List<SchedulingPolicy> policies = Arrays.asList(
+	            new LockStep(), 
+	            new NaiveIndependent(), 
+	            new GPUIndependentCPUCoupled());
+
+	    for(SchedulingPolicy policy : policies)
+	    {
+	        Simulator sim = new Simulator(policy);
+	        sim.run();
+
+	        sim.printSummary();
+	    }
 	}
 
 }

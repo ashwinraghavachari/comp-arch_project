@@ -6,9 +6,9 @@ public enum FREQ_STATE {
 	CPU1(3.65),
 	CPU2(3.80),
 	CPU3(4.00),
-	GPU0(.540),
+	GPU0(.135),
 	GPU1(.405),
-	GPU2(.135);
+	GPU2(.540);
 	
 	private double freq;
 	

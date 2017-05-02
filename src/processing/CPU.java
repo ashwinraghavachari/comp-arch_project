@@ -40,12 +40,10 @@ public class CPU extends ProcessingUnit{
 		if (req.needsGPU()){
 		    req.setNeedsGPU(false);
 			req.setDestination(inboundPU);
-			inboundPU.setFreq(FREQ_STATE.GPU2);
 			cpucycles = req.getPreGPUCycles();
 		}
 		else {
 			req.setDestination(outboundPU);
-			inboundPU.setFreq(FREQ_STATE.GPU0);
 			cpucycles = req.getCPUCycles();
 		}
 
