@@ -1,9 +1,10 @@
 import java.util.HashMap;
+import java.util.Map;
 
 public class CPU extends ProcessingUnit{
 	private double totalEnergy;
 	private double freq;
-	private HashMap<Double, Double> freqToVolt;
+	private Map<Double, Double> freqToVolt;
 	Simulator sim;
 	
 	public CPU(Simulator sim){
@@ -20,20 +21,23 @@ public class CPU extends ProcessingUnit{
 	
 	@Override
 	public void processRequest (Request req) {
-		int cpucycles = req.getCPUCycles();
-		double time = (double)cpucycles / freq;
-		double voltage = freqToVolt.get(freq);
-		double curEnergy = time * voltage * voltage;
-		this.totalEnergy += curEnergy;
+		long cpucycles;
 		
 		// Send request to GPU if needed
 		if (req.needsGPU()){
 			req.setDestination(inboundPU);
+			cpucycles = req.getPreGPUCycles();
 		}
 		// Send request back to NIC if done
 		else {
 			req.setDestination(outboundPU);
+			cpucycles = req.getCPUCycles();
 		}
+
+		double time = (double)cpucycles / freq;
+		double voltage = freqToVolt.get(freq);
+		double curEnergy = time * voltage * voltage;
+		this.totalEnergy += curEnergy;
 		
 	}
 	
