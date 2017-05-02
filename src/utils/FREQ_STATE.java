@@ -1,3 +1,4 @@
+package utils;
 
 public enum FREQ_STATE {
 

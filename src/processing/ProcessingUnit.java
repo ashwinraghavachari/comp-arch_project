@@ -1,3 +1,7 @@
+package processing;
+
+import requests.Request;
+import utils.FREQ_STATE;
 
 public abstract class ProcessingUnit {
 

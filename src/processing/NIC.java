@@ -1,5 +1,10 @@
+package processing;
 import java.util.ArrayList;
 import java.util.List;
+
+import requests.Request;
+import simulator.Simulator;
+import utils.FREQ_STATE;
 
 public class NIC extends ProcessingUnit{
 

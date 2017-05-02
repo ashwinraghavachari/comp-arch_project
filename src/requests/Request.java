@@ -1,39 +1,53 @@
+package requests;
+
+import processing.ProcessingUnit;
 
 public abstract class Request implements Comparable<Request>{
 
-    private boolean needGPU;
-	private int SLA;
+    protected boolean needGPU;
+	protected long sla;
 
 	protected long entryTime;
 	protected long startTime;
-	private int cyclecount;
-	//if(needGPU)
-	private int preGPUCycles;
-	private int GPUCycles;
+	protected long totalRunTime;
 
-	private int CPUCycles;
+	public long getTotalRunTime() {
+        return totalRunTime;
+    }
+    public void setTotalRunTime(long totalRunTime) {
+        this.totalRunTime = totalRunTime;
+    }
+
+    protected long cyclecount;
+	//if(needGPU)
+	protected long preGPUCycles;
+	protected long GPUCycles;
+
+	protected long CPUCycles;
 	protected ProcessingUnit destination;
 	
 	public boolean needsGPU() {
 		return needGPU;
 	}
-	public int getSLA() {
-		return SLA;
+	public long getSLA() {
+		return sla;
 	}
-	public int getCyclecount() {
+
+	public long getCyclecount() {
 		return cyclecount;
 	}
-	public int getCPUCycles() {
+
+	public long getCPUCycles() {
 		return CPUCycles;
 	}
 
 	public long getStartTime() {
         return startTime;
     }
-    public int getPreGPUCycles() {
+    public long getPreGPUCycles() {
         return preGPUCycles;
     }
-    public int getGPUCycles() {
+    public long getGPUCycles() {
         return GPUCycles;
     }
 
@@ -54,5 +68,9 @@ public abstract class Request implements Comparable<Request>{
 	}
 	
 	public abstract void processRequest();
+
+    public long getEntryTime() {
+        return entryTime;
+    }
 	
 }
