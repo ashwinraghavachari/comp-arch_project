@@ -38,6 +38,11 @@ public class NIC extends ProcessingUnit{
         sim.getPolicy().setFrequencies(req);
 	}
 
+	@Override
+	public double getTotalEnergyUsage(){
+		return 0;
+	}
+
     @Override
     public long getDelayTime() {
         return sim.getCurrentTime();

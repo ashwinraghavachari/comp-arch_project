@@ -59,13 +59,13 @@ public class GPUIndependentCPUCoupled implements SchedulingPolicy {
     private void updateCPU()
     {
         
-        if(cpuReqsInSystem.size() < THRESHOLD_LOW){
+        if(cpuReqsInSystem.size() < THRESHOLD_LOW*2){
             cpu.setFreq(FREQ_STATE.CPU0);
         }
-        else if (cpuReqsInSystem.size() < THRESHOLD_MID){
+        else if (cpuReqsInSystem.size() < THRESHOLD_MID*2){
             cpu.setFreq(FREQ_STATE.CPU1);
         }
-        else if (cpuReqsInSystem.size() < THRESHOLD_HIGH){
+        else if (cpuReqsInSystem.size() < THRESHOLD_HIGH*2){
             cpu.setFreq(FREQ_STATE.CPU2);
         }
         else {

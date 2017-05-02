@@ -56,6 +56,11 @@ public class Client extends ProcessingUnit{
             failedReqs.add(req);
         }
     }
+
+	@Override
+	public double getTotalEnergyUsage(){
+		return 0;
+	}
     
     @Override
     public void printSummary()

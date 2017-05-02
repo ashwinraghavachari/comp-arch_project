@@ -1,8 +1,9 @@
 package simulator;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
@@ -29,6 +30,7 @@ public class Simulator implements Runnable{
     private ProcessingUnit nic;
     
     private SchedulingPolicy policy;
+    
 	
 	public Simulator(SchedulingPolicy policy)
 	{
@@ -94,12 +96,24 @@ public class Simulator implements Runnable{
 		gpu.printSummary();
 		nic.printSummary();
     }
+    
+    private double cpuEnergy()
+    {
+        return cpu.getTotalEnergyUsage();
+    }
+
+    private double gpuEnergy()
+    {
+        return gpu.getTotalEnergyUsage();
+    }
 
     /*
      * Compare dvfs with cpu and gpu in lock step vs independent
      */
 	public static void main(String[] args)
 	{
+	    Map<SchedulingPolicy, Simulator> results = new HashMap<>();
+
 	    List<SchedulingPolicy> policies = Arrays.asList(
 	            new LockStep(), 
 	            new NaiveIndependent(), 
@@ -111,7 +125,22 @@ public class Simulator implements Runnable{
 	        sim.run();
 
 	        sim.printSummary();
+	        
+	        results.put(policy, sim);
+
+	        double baselineCPU = results.get(policies.get(0)).cpuEnergy();
+	        double baselineGPU = results.get(policies.get(0)).gpuEnergy();
+
+	        double cpuImprovement = (baselineCPU - sim.cpuEnergy())
+	                /sim.cpuEnergy() * 100;
+
+	        double gpuImprovement = (baselineGPU - sim.gpuEnergy()) 
+	                /sim.gpuEnergy() * 100;
+	    
+	        System.out.println("CPU improvement: " + cpuImprovement);
+	        System.out.println("GPU improvement: " + gpuImprovement);
 	    }
+	    
 	}
 
 }

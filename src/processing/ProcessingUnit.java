@@ -25,4 +25,5 @@ public abstract class ProcessingUnit {
 	}
 
     public abstract void printSummary();
+	public abstract double getTotalEnergyUsage();
 }

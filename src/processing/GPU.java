@@ -46,10 +46,6 @@ public class GPU extends ProcessingUnit{
         sim.addReq(req);
 	}
 	
-	public double getTotalEnergyUsage(){
-		return totalEnergy;
-	}
-	
 	public double updateEnergyUsage(int idlecycles){
 		double time = (double)idlecycles / freq;
 		double voltage = freqToVolt.get(freq);
@@ -62,6 +58,11 @@ public class GPU extends ProcessingUnit{
     public long getDelayTime() {
         return currentDelayTime;
     }
+
+	@Override
+	public double getTotalEnergyUsage(){
+		return totalEnergy;
+	}
 
     @Override
     public void printSummary() {

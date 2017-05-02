@@ -60,6 +60,7 @@ public class CPU extends ProcessingUnit{
         sim.addReq(req);
 	}
 	
+	@Override
 	public double getTotalEnergyUsage(){
 		return totalEnergy;
 	}
