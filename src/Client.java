@@ -16,6 +16,18 @@ public class Client extends ProcessingUnit{
     public void processRequest(Request req) {
         long sla = req.getSLA();
         long finishTime = sim.getCurrentTime();
+        long entryTime = req.getEntryTime();
+
+        long runTime = finishTime - entryTime;
+        
+        if(runTime <= sla)
+        {
+            
+        }
+        else
+        {
+            
+        }
     }
 
     

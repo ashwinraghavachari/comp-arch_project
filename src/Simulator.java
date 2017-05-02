@@ -14,6 +14,18 @@ public class Simulator implements Runnable{
 		ProcessingUnit gpu = new GPU(this);
 		ProcessingUnit nic = new NIC(this);
 		Client client = new Client(this);
+		
+		client.addInbound(nic);
+		client.addOutbound(nic);
+
+		nic.addInbound(cpu);
+		nic.addOutbound(client);
+
+		cpu.addInbound(gpu);
+		cpu.addOutbound(nic);
+
+		gpu.addInbound(cpu);
+		gpu.addOutbound(cpu);
 	}
 
 	@Override

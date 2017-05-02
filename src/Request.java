@@ -54,5 +54,8 @@ public abstract class Request implements Comparable<Request>{
 	}
 	
 	public abstract void processRequest();
+    public long getEntryTime() {
+        return entryTime;
+    }
 	
 }

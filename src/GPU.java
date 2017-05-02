@@ -24,6 +24,8 @@ public class GPU extends ProcessingUnit{
 		double voltage = freqToVolt.get(freq);
 		double curEnergy = time * voltage * voltage;
 		this.totalEnergy += curEnergy;
+		
+		req.setDestination(outboundPU);
 	}
 	
 	public void setFreq(double freq){
