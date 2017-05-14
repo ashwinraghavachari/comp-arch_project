@@ -12,7 +12,7 @@ import requests.Request;
 public class GPUHeavy extends Workload{
 
     //Larger number: more CPU
-    private static final double CPU_GPU_RATIO = .75;
+    private static final double CPU_GPU_RATIO = .25;
     
     @Override
     public List<Request> newWorkload(ProcessingUnit systemEntry) {

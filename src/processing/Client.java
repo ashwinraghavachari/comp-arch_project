@@ -1,6 +1,8 @@
 package processing;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import requests.Request;
 import simulator.Simulator;
@@ -51,21 +53,23 @@ public class Client extends ProcessingUnit{
     @Override
     public void printSummary()
     {
-        System.out.println("Total reqs sent:\t" + workload.workload().size());
+        long workloadSize = workload.workload().size();
+        System.out.println("Total reqs sent:\t" + workloadSize);
         System.out.println("Successful sla reqs:\t" + successfulReqs.size());
         System.out.println("failed sla reqs:\t" + failedReqs.size());
-        System.out.println("average +sla time(ns):\t" + 
-                successfulReqs.stream().map(r -> r.getTotalRunTime()).reduce(Long::sum).get()
-                /(long)successfulReqs.size());
-        System.out.println("average -sla time(ns):\t" + 
-                failedReqs.stream().map(r -> r.getTotalRunTime()).reduce(Long::sum).get()
-                /(long)failedReqs.size());
+        if(!successfulReqs.isEmpty())
+            System.out.println("average +sla time(ns):\t" + 
+                    successfulReqs.stream().map(r -> r.getTotalRunTime()).reduce(0l, Long::sum)
+                    /(long)successfulReqs.size());
+        if(!failedReqs.isEmpty())
+            System.out.println("average -sla time(ns):\t" + 
+                    failedReqs.stream().map(r -> r.getTotalRunTime()).reduce(0l, Long::sum)
+                    /(long)failedReqs.size());
+
         System.out.println("average cpu req time(ns):\t" + 
-                workload.cpuWorkload().stream().map(r -> r.getTotalRunTime()).reduce(Long::sum).get()
-                /(long)failedReqs.size());
+                workload.cpuWorkload().stream().collect(Collectors.averagingLong(r -> r.getTotalRunTime())));
         System.out.println("average gpu req time(ns):\t" + 
-                workload.gpuWorkload().stream().map(r -> r.getTotalRunTime()).reduce(Long::sum).get()
-                /(long)failedReqs.size());
+                workload.gpuWorkload().stream().collect(Collectors.averagingLong(r -> r.getTotalRunTime())));
 
         System.out.println("end time:\t" + sim.getCurrentTime());
     }

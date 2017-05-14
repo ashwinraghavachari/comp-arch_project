@@ -8,7 +8,7 @@ import requests.Request;
 public abstract class Workload {
 
     protected static final long TOTAL_REQUESTS = 2000;
-    protected static final long REQUEST_SEPARATION = 1;
+    protected static final long REQUEST_SEPARATION = 100;
     protected static final long RANDOM_SEED = 42;
 
     protected List<Request> load;

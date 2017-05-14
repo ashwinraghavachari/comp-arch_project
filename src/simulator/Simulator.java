@@ -35,6 +35,7 @@ public class Simulator implements Runnable{
     private ProcessingUnit nic;
     
     private SchedulingPolicy policy;
+    private Workload workload;
     
 	
 	public Simulator(SchedulingPolicy policy, Workload workload)
@@ -59,6 +60,8 @@ public class Simulator implements Runnable{
 		this.policy = policy;
 		policy.setCPU(cpu);
 		policy.setGPU(gpu);
+		
+		this.workload = workload;
 	}
 
 	@Override
@@ -94,6 +97,7 @@ public class Simulator implements Runnable{
     private void printSummary() {
         System.out.println("*******SIM FINISH*******");
         System.out.println("Policy: " + policy.getClass().getSimpleName());
+        System.out.println("Workload: " + workload.getClass().getSimpleName());
         System.out.println();
 
 		client.printSummary();
@@ -117,7 +121,7 @@ public class Simulator implements Runnable{
      */
 	public static void main(String[] args)
 	{
-	    Map<SchedulingPolicy, Simulator> results = new HashMap<>();
+	    Map<SchedulingPolicy, Map<Workload, Simulator>> results = new HashMap<>();
 
 	    List<SchedulingPolicy> policies = Arrays.asList(
 	            new LockStep(), 
@@ -139,10 +143,12 @@ public class Simulator implements Runnable{
 
 	            sim.printSummary();
 
-	            results.put(policy, sim);
+	            results.putIfAbsent(policy, new HashMap<>());
 
-	            double baselineCPU = results.get(policies.get(0)).cpuEnergy();
-	            double baselineGPU = results.get(policies.get(0)).gpuEnergy();
+	            results.get(policy).put(workload, sim);
+
+	            double baselineCPU = results.get(policies.get(0)).get(workload).cpuEnergy();
+	            double baselineGPU = results.get(policies.get(0)).get(workload).gpuEnergy();
 
 	            double cpuImprovement = (baselineCPU - sim.cpuEnergy())
 	                    /sim.cpuEnergy() * 100;
