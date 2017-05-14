@@ -1,10 +1,10 @@
 package processing;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import requests.Request;
 import simulator.Simulator;
-import utils.FREQ_STATE;
 
 public class NIC extends ProcessingUnit{
 
@@ -46,6 +46,16 @@ public class NIC extends ProcessingUnit{
     @Override
     public long getDelayTime() {
         return sim.getCurrentTime();
+    }
+
+    @Override
+    public List<String> getHeaders() {
+        return Arrays.asList();
+    }
+
+    @Override
+    public List<String> getSummary() {
+        return Arrays.asList();
     }
 
     @Override

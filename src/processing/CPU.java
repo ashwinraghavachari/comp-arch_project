@@ -1,10 +1,11 @@
 package processing;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import requests.Request;
 import simulator.Simulator;
-import utils.FREQ_STATE;
 
 public class CPU extends ProcessingUnit{
 	private double totalEnergy;
@@ -49,7 +50,7 @@ public class CPU extends ProcessingUnit{
 
 		double time = (double)cpucycles / freq;
 		double voltage = freqToVolt.get(freq);
-		double curEnergy = time * voltage * voltage;
+		double curEnergy = time * voltage * voltage * freq;
 		this.totalEnergy += curEnergy;
 		
 		
@@ -68,7 +69,7 @@ public class CPU extends ProcessingUnit{
 	public double updateEnergyUsage(int idlecycles){
 		double time = (double)idlecycles / freq;
 		double voltage = freqToVolt.get(freq);
-		double idleEnergy = time * voltage * voltage;
+		double idleEnergy = time * voltage * voltage * freq;
 		totalEnergy += idleEnergy;
 		return totalEnergy;
 	}
@@ -82,5 +83,15 @@ public class CPU extends ProcessingUnit{
     public void printSummary() {
         System.out.println("***CPU***");
         System.out.println("total energy: " + totalEnergy);
+    }
+
+    @Override
+    public List<String> getHeaders() {
+        return Arrays.asList("CPU total energy");
+    }
+
+    @Override
+    public List<String> getSummary() {
+        return Arrays.asList(Double.toString(totalEnergy));
     }
 }

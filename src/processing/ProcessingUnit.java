@@ -1,5 +1,7 @@
 package processing;
 
+import java.util.List;
+
 import requests.Request;
 import utils.FREQ_STATE;
 
@@ -25,5 +27,7 @@ public abstract class ProcessingUnit {
 	}
 
     public abstract void printSummary();
+    public abstract List<String> getHeaders();
+    public abstract List<String> getSummary();
 	public abstract double getTotalEnergyUsage();
 }

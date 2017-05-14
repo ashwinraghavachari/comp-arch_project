@@ -1,5 +1,7 @@
 package processing;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import requests.Request;
@@ -35,7 +37,7 @@ public class GPU extends ProcessingUnit{
 		long gpucycles = req.getGPUCycles();
 		double time = (double)gpucycles / freq;
 		double voltage = freqToVolt.get(freq);
-		double curEnergy = time * voltage * voltage;
+		double curEnergy = time * voltage * voltage * freq;
 		this.totalEnergy += curEnergy;
 		
 		long scheduledTime = sim.getCurrentTime() + (long)time;
@@ -49,7 +51,7 @@ public class GPU extends ProcessingUnit{
 	public double updateEnergyUsage(int idlecycles){
 		double time = (double)idlecycles / freq;
 		double voltage = freqToVolt.get(freq);
-		double idleEnergy = time * voltage * voltage;
+		double idleEnergy = time * voltage * voltage * freq;
 		totalEnergy += idleEnergy;
 		return totalEnergy;
 	}
@@ -68,5 +70,15 @@ public class GPU extends ProcessingUnit{
     public void printSummary() {
         System.out.println("***GPU***");
         System.out.println("total energy: " + totalEnergy);
+    }
+
+    @Override
+    public List<String> getHeaders() {
+        return Arrays.asList("GPU total energy");
+    }
+
+    @Override
+    public List<String> getSummary() {
+        return Arrays.asList(Double.toString(totalEnergy));
     }
 }

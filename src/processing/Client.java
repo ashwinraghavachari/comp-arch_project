@@ -75,6 +75,35 @@ public class Client extends ProcessingUnit{
     }
 
     @Override
+    public List<String> getHeaders() {
+        List<String> headers = new ArrayList<>();
+        headers.add("Total Sent");
+        headers.add("sla+ Requests");
+        headers.add("sla- Requests");
+        headers.add("sla+ time");
+        headers.add("sla- time");
+        headers.add("Average CPU req time");
+        headers.add("Average GPU req time");
+        headers.add("End time");
+        return headers;
+    }
+
+    @Override
+    public List<String> getSummary() {
+        List<String> output = new ArrayList<>();
+        output.add(Integer.toString(workload.workload().size()));
+        output.add(Integer.toString(successfulReqs.size()));
+        output.add(Integer.toString(failedReqs.size()));
+        output.add(Double.toString(successfulReqs.stream().collect(Collectors.averagingLong(r -> r.getTotalRunTime()))));
+        output.add(Double.toString(failedReqs.stream().collect(Collectors.averagingLong(r -> r.getTotalRunTime()))));
+
+        output.add(Double.toString(workload.cpuWorkload().stream().collect(Collectors.averagingLong(r -> r.getTotalRunTime()))));
+        output.add(Double.toString(workload.gpuWorkload().stream().collect(Collectors.averagingLong(r -> r.getTotalRunTime()))));
+        output.add(Long.toString(sim.getCurrentTime()));
+        return output;
+    }
+
+    @Override
     public long getDelayTime()
     {
         return sim.getCurrentTime();
