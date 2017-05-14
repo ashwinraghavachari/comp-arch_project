@@ -6,9 +6,10 @@ import processing.ProcessingUnit;
 import requests.Request;
 
 public abstract class Workload {
-    protected static final long GPU_REQUESTS = 1000;
-    protected static final long CPU_REQUESTS = 1000;
+
+    protected static final long TOTAL_REQUESTS = 2000;
     protected static final long REQUEST_SEPARATION = 1;
+    protected static final long RANDOM_SEED = 42;
 
     protected List<Request> load;
     protected List<Request> gpuReqs;
