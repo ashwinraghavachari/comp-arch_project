@@ -17,6 +17,11 @@ import scheduling.GPUIndependentCPUCoupled;
 import scheduling.LockStep;
 import scheduling.NaiveIndependent;
 import scheduling.SchedulingPolicy;
+import workloads.CPUHeavy;
+import workloads.GPUHeavy;
+import workloads.PUUniform;
+import workloads.RandomWork;
+import workloads.Workload;
 
 
 public class Simulator implements Runnable{
@@ -32,12 +37,12 @@ public class Simulator implements Runnable{
     private SchedulingPolicy policy;
     
 	
-	public Simulator(SchedulingPolicy policy)
+	public Simulator(SchedulingPolicy policy, Workload workload)
 	{
 		cpu = new CPU(this);
 		gpu = new GPU(this);
 		nic = new NIC(this);
-		client = new Client(this, nic);
+		client = new Client(this, nic, workload);
 		
 		client.addInbound(nic);
 		client.addOutbound(nic);
@@ -67,9 +72,9 @@ public class Simulator implements Runnable{
 		}
 	}	
 	
-	public boolean addReqs(List<Request> reqs)
+	public boolean addWorkload(List<Request> workload)
 	{
-		return eventStream.addAll(reqs);
+		return eventStream.addAll(workload);
 	}
 	
 	public boolean addReq(Request req)
@@ -119,26 +124,35 @@ public class Simulator implements Runnable{
 	            new NaiveIndependent(), 
 	            new GPUIndependentCPUCoupled());
 
+	    List<Workload> workloads = Arrays.asList(
+	            new PUUniform(), 
+	            new RandomWork(), 
+	            new GPUHeavy(), 
+	            new CPUHeavy());
+
 	    for(SchedulingPolicy policy : policies)
 	    {
-	        Simulator sim = new Simulator(policy);
-	        sim.run();
+	        for(Workload workload : workloads)
+	        {
+	            Simulator sim = new Simulator(policy, workload);
+	            sim.run();
 
-	        sim.printSummary();
-	        
-	        results.put(policy, sim);
+	            sim.printSummary();
 
-	        double baselineCPU = results.get(policies.get(0)).cpuEnergy();
-	        double baselineGPU = results.get(policies.get(0)).gpuEnergy();
+	            results.put(policy, sim);
 
-	        double cpuImprovement = (baselineCPU - sim.cpuEnergy())
-	                /sim.cpuEnergy() * 100;
+	            double baselineCPU = results.get(policies.get(0)).cpuEnergy();
+	            double baselineGPU = results.get(policies.get(0)).gpuEnergy();
 
-	        double gpuImprovement = (baselineGPU - sim.gpuEnergy()) 
-	                /sim.gpuEnergy() * 100;
-	    
-	        System.out.println("CPU energy improvement: " + cpuImprovement + "%");
-	        System.out.println("GPU energy improvement: " + gpuImprovement + "%");
+	            double cpuImprovement = (baselineCPU - sim.cpuEnergy())
+	                    /sim.cpuEnergy() * 100;
+
+	            double gpuImprovement = (baselineGPU - sim.gpuEnergy()) 
+	                    /sim.gpuEnergy() * 100;
+
+	            System.out.println("CPU energy improvement: " + cpuImprovement + "%");
+	            System.out.println("GPU energy improvement: " + gpuImprovement + "%");
+	        }
 	    }
 	    
 	}

@@ -2,40 +2,26 @@ package processing;
 import java.util.ArrayList;
 import java.util.List;
 
-import requests.GenericCPURequest;
-import requests.GenericGPURequest;
 import requests.Request;
 import simulator.Simulator;
+import workloads.Workload;
 
 
 public class Client extends ProcessingUnit{
 
-    List<Request> workload = new ArrayList<>();
     Simulator sim;
     List<Request> successfulReqs = new ArrayList<>();
     List<Request> failedReqs = new ArrayList<>();
-    List<Request> gpuReqs = new ArrayList<>();
-    List<Request> cpuReqs = new ArrayList<>();
-
-    private static final long GPU_REQUESTS = 1000;
-    private static final long CPU_REQUESTS = 1000;
-    private static final long REQUEST_SEPARATION = 1;
+    
+    private final ProcessingUnit systemEntry;
+    private final Workload workload;
         
-    public Client(Simulator sim, ProcessingUnit systemEntry) {
+    public Client(Simulator sim, ProcessingUnit systemEntry, Workload workload) {
         this.sim = sim;
-        for(long i = 0; i < GPU_REQUESTS; i++)
-        {
-            gpuReqs.add(new GenericGPURequest(i*REQUEST_SEPARATION, systemEntry));
-        }
-        for(long i = 0; i < CPU_REQUESTS; i++)
-        {
-            cpuReqs.add(new GenericCPURequest(i*REQUEST_SEPARATION, systemEntry));
-        }
-
-        workload.addAll(gpuReqs);
-        workload.addAll(cpuReqs);
-
-        sim.addReqs(workload);
+        this.systemEntry = systemEntry;
+        
+        this.workload = workload;
+        sim.addWorkload(workload.newWorkload(systemEntry));
     }
 
     @Override
@@ -65,7 +51,7 @@ public class Client extends ProcessingUnit{
     @Override
     public void printSummary()
     {
-        System.out.println("Total reqs sent:\t" + workload.size());
+        System.out.println("Total reqs sent:\t" + workload.workload().size());
         System.out.println("Successful sla reqs:\t" + successfulReqs.size());
         System.out.println("failed sla reqs:\t" + failedReqs.size());
         System.out.println("average +sla time(ns):\t" + 
@@ -75,10 +61,10 @@ public class Client extends ProcessingUnit{
                 failedReqs.stream().map(r -> r.getTotalRunTime()).reduce(Long::sum).get()
                 /(long)failedReqs.size());
         System.out.println("average cpu req time(ns):\t" + 
-                cpuReqs.stream().map(r -> r.getTotalRunTime()).reduce(Long::sum).get()
+                workload.cpuWorkload().stream().map(r -> r.getTotalRunTime()).reduce(Long::sum).get()
                 /(long)failedReqs.size());
         System.out.println("average gpu req time(ns):\t" + 
-                gpuReqs.stream().map(r -> r.getTotalRunTime()).reduce(Long::sum).get()
+                workload.gpuWorkload().stream().map(r -> r.getTotalRunTime()).reduce(Long::sum).get()
                 /(long)failedReqs.size());
 
         System.out.println("end time:\t" + sim.getCurrentTime());
