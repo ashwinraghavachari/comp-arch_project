@@ -18,6 +18,8 @@ public class NaiveIndependent implements SchedulingPolicy {
 
     List<Request> cpuReqsInSystem = new ArrayList<>();
     List<Request> gpuReqsInSystem = new ArrayList<>();
+    FREQ_STATE gpuDVFS = FREQ_STATE.GPU0;
+    FREQ_STATE cpuDVFS = FREQ_STATE.CPU0;
 
     @Override
     public void setFrequencies(Request req) {
@@ -28,7 +30,7 @@ public class NaiveIndependent implements SchedulingPolicy {
             {
                 gpuReqsInSystem.add(req);
             }
-            updateGPU();
+            gpuDVFS = updateGPU();
         }
         else
         {
@@ -37,41 +39,42 @@ public class NaiveIndependent implements SchedulingPolicy {
             {
                 cpuReqsInSystem.add(req);
             }
-            updateCPU();
+            cpuDVFS = updateCPU();
         }
-
+        gpu.setFreq(gpuDVFS);
+        cpu.setFreq(cpuDVFS);
     }
     
-    private void updateGPU()
+    private FREQ_STATE updateGPU()
     {
         if(gpuReqsInSystem.size() < THRESHOLD_LOW){
-            gpu.setFreq(FREQ_STATE.GPU0);
+            return FREQ_STATE.GPU0;
         }
         else if (gpuReqsInSystem.size() < THRESHOLD_MID){
-            gpu.setFreq(FREQ_STATE.GPU1);
+            return (FREQ_STATE.GPU1);
         }
         else if (gpuReqsInSystem.size() < THRESHOLD_HIGH){
-            gpu.setFreq(FREQ_STATE.GPU2);
+            return (FREQ_STATE.GPU2);
         }
         else {
-            gpu.setFreq(FREQ_STATE.GPU2);
+            return (FREQ_STATE.GPU2);
         }
     }
 
-    private void updateCPU()
+    private FREQ_STATE updateCPU()
     {
         
         if(cpuReqsInSystem.size() < THRESHOLD_LOW){
-            cpu.setFreq(FREQ_STATE.CPU0);
+            return (FREQ_STATE.CPU0);
         }
         else if (cpuReqsInSystem.size() < THRESHOLD_MID){
-            cpu.setFreq(FREQ_STATE.CPU1);
+            return (FREQ_STATE.CPU1);
         }
         else if (cpuReqsInSystem.size() < THRESHOLD_HIGH){
-            cpu.setFreq(FREQ_STATE.CPU2);
+            return (FREQ_STATE.CPU2);
         }
         else {
-            cpu.setFreq(FREQ_STATE.CPU3);
+            return (FREQ_STATE.CPU3);
         }
     }
 
