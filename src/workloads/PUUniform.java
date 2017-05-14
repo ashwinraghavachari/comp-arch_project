@@ -9,16 +9,6 @@ import requests.GenericGPURequest;
 import requests.Request;
 
 public class PUUniform extends Workload{
-
-    private List<Request> load;
-    private List<Request> gpuReqs;
-    private List<Request> cpuReqs;
-
-    private static final long GPU_REQUESTS = 1000;
-    private static final long CPU_REQUESTS = 1000;
-    private static final long REQUEST_SEPARATION = 1;
-    
-    private ProcessingUnit systemEntry;
     
     @Override
     public List<Request> newWorkload(ProcessingUnit systemEntry) {
