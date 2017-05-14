@@ -1,11 +1,17 @@
 package simulator;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import processing.CPU;
 import processing.Client;
@@ -13,6 +19,7 @@ import processing.GPU;
 import processing.NIC;
 import processing.ProcessingUnit;
 import requests.Request;
+import scheduling.ExitTimeResponsive;
 import scheduling.GPUIndependentCPUCoupled;
 import scheduling.LockStep;
 import scheduling.NaiveIndependent;
@@ -22,6 +29,8 @@ import workloads.GPUHeavy;
 import workloads.PUUniform;
 import workloads.RandomWork;
 import workloads.Workload;
+
+import com.opencsv.CSVWriter;
 
 
 public class Simulator implements Runnable{
@@ -105,6 +114,41 @@ public class Simulator implements Runnable{
 		gpu.printSummary();
 		nic.printSummary();
     }
+
+    private void writeHeaders(CSVWriter writer) {
+        List<String> headers = new ArrayList<>();
+
+        headers.add("Scheduling Policy");
+        headers.add("Workload");
+
+		headers.addAll(client.getHeaders());
+		headers.addAll(cpu.getHeaders());
+		headers.addAll(gpu.getHeaders());
+		headers.addAll(nic.getHeaders());
+
+		headers.add("CPU Energy Improvement");
+		headers.add("GPU Energy Improvement");
+		
+		writer.writeNext(headers.toArray(new String[0]));
+    }
+
+    private void writeSummary(CSVWriter writer, double cpuImprovement, double gpuImprovement) {
+        List<String> output = new ArrayList<>();
+
+        output.add(policy.getClass().getSimpleName());
+        output.add(workload.getClass().getSimpleName());
+
+		output.addAll(client.getSummary());
+		output.addAll(cpu.getSummary());
+		output.addAll(gpu.getSummary());
+		output.addAll(nic.getSummary());
+		
+		output.add(Double.toString(cpuImprovement));
+		output.add(Double.toString(gpuImprovement));
+		
+		
+		writer.writeNext(output.toArray(new String[0]));
+    }
     
     private double cpuEnergy()
     {
@@ -119,14 +163,15 @@ public class Simulator implements Runnable{
     /*
      * Compare dvfs with cpu and gpu in lock step vs independent
      */
-	public static void main(String[] args)
+	public static void main(String[] args) throws IOException
 	{
 	    Map<SchedulingPolicy, Map<Workload, Simulator>> results = new HashMap<>();
 
 	    List<SchedulingPolicy> policies = Arrays.asList(
 	            new LockStep(), 
 	            new NaiveIndependent(), 
-	            new GPUIndependentCPUCoupled());
+	            new GPUIndependentCPUCoupled(), 
+	            new ExitTimeResponsive());
 
 	    List<Workload> workloads = Arrays.asList(
 	            new PUUniform(), 
@@ -134,33 +179,47 @@ public class Simulator implements Runnable{
 	            new GPUHeavy(), 
 	            new CPUHeavy());
 
-	    for(SchedulingPolicy policy : policies)
-	    {
-	        for(Workload workload : workloads)
+	    boolean headers = false;
+	    try(CSVWriter writer = new CSVWriter(new FileWriter("summary.csv"), ',')){
+	        // feed in your array (or convert your data to an array)
+
+	        for(SchedulingPolicy policy : policies)
 	        {
-	            Simulator sim = new Simulator(policy, workload);
-	            sim.run();
+	            for(Workload workload : workloads)
+	            {
+	                Simulator sim = new Simulator(policy, workload);
+	                sim.run();
 
-	            sim.printSummary();
+	                sim.printSummary();
 
-	            results.putIfAbsent(policy, new HashMap<>());
+	                results.putIfAbsent(policy, new HashMap<>());
 
-	            results.get(policy).put(workload, sim);
+	                results.get(policy).put(workload, sim);
 
-	            double baselineCPU = results.get(policies.get(0)).get(workload).cpuEnergy();
-	            double baselineGPU = results.get(policies.get(0)).get(workload).gpuEnergy();
+	                double baselineCPU = results.get(policies.get(0)).get(workload).cpuEnergy();
+	                double baselineGPU = results.get(policies.get(0)).get(workload).gpuEnergy();
 
-	            double cpuImprovement = (baselineCPU - sim.cpuEnergy())
-	                    /sim.cpuEnergy() * 100;
+	                double cpuImprovement = (baselineCPU - sim.cpuEnergy())
+	                        /sim.cpuEnergy() * 100;
 
-	            double gpuImprovement = (baselineGPU - sim.gpuEnergy()) 
-	                    /sim.gpuEnergy() * 100;
+	                double gpuImprovement = (baselineGPU - sim.gpuEnergy()) 
+	                        /sim.gpuEnergy() * 100;
 
-	            System.out.println("CPU energy improvement: " + cpuImprovement + "%");
-	            System.out.println("GPU energy improvement: " + gpuImprovement + "%");
+	                System.out.println("CPU energy improvement: " + cpuImprovement + "%");
+	                System.out.println("GPU energy improvement: " + gpuImprovement + "%");
+
+
+	                if(!headers)
+	                {
+	                    sim.writeHeaders(writer);
+	                    headers = true;
+	                }
+	                sim.writeSummary(writer, cpuImprovement, gpuImprovement);
+	            }
 	        }
+
+
 	    }
-	    
 	}
 
 }
