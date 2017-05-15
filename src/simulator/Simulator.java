@@ -4,14 +4,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import processing.CPU;
 import processing.Client;
@@ -46,6 +47,7 @@ public class Simulator implements Runnable{
     private SchedulingPolicy policy;
     private Workload workload;
     
+    private static final ExecutorService exec = Executors.newCachedThreadPool();
 	
 	public Simulator(SchedulingPolicy policy, Workload workload)
 	{
@@ -103,7 +105,7 @@ public class Simulator implements Runnable{
         return policy;
     }
 
-    private void printSummary() {
+    private boolean printSummary() {
         System.out.println("*******SIM FINISH*******");
         System.out.println("Policy: " + policy.getClass().getSimpleName());
         System.out.println("Workload: " + workload.getClass().getSimpleName());
@@ -113,6 +115,8 @@ public class Simulator implements Runnable{
 		cpu.printSummary();
 		gpu.printSummary();
 		nic.printSummary();
+		
+		return true;
     }
 
     private void writeHeaders(CSVWriter writer) {
@@ -163,7 +167,7 @@ public class Simulator implements Runnable{
     /*
      * Compare dvfs with cpu and gpu in lock step vs independent
      */
-	public static void main(String[] args) throws IOException
+	public static void main(String[] args) throws IOException, InterruptedException, ExecutionException
 	{
 	    Map<SchedulingPolicy, Map<Workload, Simulator>> results = new HashMap<>();
 
@@ -187,10 +191,10 @@ public class Simulator implements Runnable{
 	        {
 	            for(Workload workload : workloads)
 	            {
-	                Simulator sim = new Simulator(policy, workload);
+	                final Simulator sim = new Simulator(policy, workload);
 	                sim.run();
-
-	                sim.printSummary();
+	                
+	                List<Future<Object>> res = exec.invokeAll(Arrays.asList(() -> sim.printSummary()));
 
 	                results.putIfAbsent(policy, new HashMap<>());
 
@@ -215,7 +219,11 @@ public class Simulator implements Runnable{
 	                    headers = true;
 	                }
 	                sim.writeSummary(writer, cpuImprovement, gpuImprovement);
+
+	                for(Future f : res)
+	                    f.get();
 	            }
+	            writer.writeNext(new String[0]);
 	        }
 
 

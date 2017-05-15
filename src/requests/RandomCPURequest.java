@@ -12,8 +12,6 @@ public class RandomCPURequest extends Request {
 
     private static final long MAX_ADDITIONAL_CYCLES = 500;
 
-    private static final long SLA = 1000;
-
     public RandomCPURequest(long entryTime, ProcessingUnit dest) {
         this.entryTime = entryTime;
         startTime = entryTime;

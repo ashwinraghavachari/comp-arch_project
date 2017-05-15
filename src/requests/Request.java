@@ -4,6 +4,8 @@ import processing.ProcessingUnit;
 
 public abstract class Request implements Comparable<Request>{
 
+    protected static final long SLA = 1500000;
+
     protected boolean needGPU;
 	protected long sla;
 

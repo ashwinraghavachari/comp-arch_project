@@ -12,8 +12,6 @@ public class RandomGPURequest extends Request {
 
     private static final long MAX_ADDITIONAL_CYCLES = 500;
 
-    private static final long SLA = 1000;
-
     public RandomGPURequest(long entryTime, ProcessingUnit dest) {
         this.entryTime = entryTime;
         startTime = entryTime;

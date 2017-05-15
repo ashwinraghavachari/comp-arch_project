@@ -6,8 +6,6 @@ public class GenericCPURequest extends Request {
     
     private static final long CPU_CYCLES = 1000;
 
-    private static final long SLA = 1000;
-
     public GenericCPURequest(long entryTime, ProcessingUnit dest) {
         this.entryTime = entryTime;
         startTime = entryTime;

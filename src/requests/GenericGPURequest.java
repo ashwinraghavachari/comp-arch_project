@@ -8,8 +8,6 @@ public class GenericGPURequest extends Request {
     private static final long CPU_CYCLES = 1000;
     private static final long PRE_GPU_CYCLES = 1000;
 
-    private static final long SLA = 1000;
-
     public GenericGPURequest(long entryTime, ProcessingUnit dest) {
         this.entryTime = entryTime;
         startTime = entryTime;

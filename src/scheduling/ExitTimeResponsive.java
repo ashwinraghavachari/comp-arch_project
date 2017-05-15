@@ -58,6 +58,20 @@ public class ExitTimeResponsive implements SchedulingPolicy {
 
         if(averageFinish > averageSLA)
             return FREQ_STATE.GPU2;
+        else if(averageFinish * 2 > averageSLA)
+        {
+            switch(gpuDVFS)
+            {
+            case GPU0:
+                return FREQ_STATE.GPU0;
+            case GPU1:
+                return FREQ_STATE.GPU0;
+            case GPU2:
+                return FREQ_STATE.GPU1;
+            default:
+                return FREQ_STATE.GPU0;
+            }
+        }
 
         if(gpuReqsInSystem.size() < THRESHOLD_LOW){
             return FREQ_STATE.GPU0;
@@ -80,6 +94,22 @@ public class ExitTimeResponsive implements SchedulingPolicy {
 
         if(averageFinish > averageSLA)
             return FREQ_STATE.CPU3;
+        else if(averageFinish > averageSLA * 2)
+        {
+            switch(cpuDVFS)
+            {
+            case CPU0:
+                return FREQ_STATE.CPU0;
+            case CPU1:
+                return FREQ_STATE.CPU0;
+            case CPU2:
+                return FREQ_STATE.CPU1;
+            case CPU3:
+                return FREQ_STATE.CPU2;
+            default:
+                return FREQ_STATE.CPU0;
+            }
+        }
         
         if(cpuReqsInSystem.size() < THRESHOLD_LOW){
             return (FREQ_STATE.CPU0);
